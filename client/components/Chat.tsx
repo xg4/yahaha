@@ -41,7 +41,7 @@ export default function Container() {
 
   useEffect(() => {
     socket.emit('join', id);
-  }, []);
+  }, [id]);
 
   function handleSend(type: string, val: string) {
     if (type === 'text' && val.trim()) {
