@@ -1,7 +1,9 @@
 import express from 'express';
+import { createServer } from 'http';
 import morgan from 'morgan';
 import next from 'next';
 import { join } from 'path';
+import { initSocket } from './socket';
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -14,6 +16,10 @@ async function main() {
 
   const server = express();
 
+  const httpServer = createServer(server);
+
+  initSocket(httpServer);
+
   // middleware
   server.use(express.json());
   server.use(morgan('tiny', { skip: (req) => req.url.startsWith('/_next') }));
@@ -21,7 +27,7 @@ async function main() {
   // client, next.js
   server.all('*', (req, res) => handle(req, res));
 
-  server.listen(port, () => {
+  httpServer.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
   });
 }
