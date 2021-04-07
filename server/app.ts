@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import morgan from 'morgan';
 import next from 'next';
 import { join } from 'path';
+import { initDB } from './db';
 import { initSocket } from './socket';
 
 const port = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ const app = next({ dev, dir: join(__dirname, '../client') });
 const handle = app.getRequestHandler();
 
 async function main() {
+  await initDB();
   await app.prepare();
 
   const server = express();

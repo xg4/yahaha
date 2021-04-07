@@ -15,11 +15,14 @@
   "author": "xg4 <xingor4@gmail.com>",
   "main": "index.js",
   "scripts": {
+    "typeorm": "ts-node ./node_modules/.bin/typeorm",
+    "db:generate": "npm run typeorm migration:generate -- -p -n",
+    "db:migrate": "npm run typeorm migration:run",
     "serve": "ts-node server/app.ts",
-    "dev": "nodemon --watch server --ext ts --exec yarn serve",
+    "dev": "nodemon --watch server --ext ts --exec npm run serve",
     "build": "next build ./client",
-    "start": "cross-env NODE_ENV=production yarn serve",
-    "heroku-postbuild": "yarn build"
+    "start": "cross-env NODE_ENV=production npm run serve",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@chatui/core": "^0.3.1",
@@ -36,12 +39,15 @@
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "next": "^10.1.3",
+    "pg": "^8.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.3",
+    "reflect-metadata": "^0.1.13",
     "socket.io": "^4.0.1",
     "socket.io-client": "^4.0.1",
     "ts-node": "^9.1.1",
+    "typeorm": "^0.2.32",
     "typescript": "^4.2.3"
   },
   "devDependencies": {
