@@ -38,6 +38,7 @@
     "@types/react-redux": "^7.1.16",
     "apollo-server-express": "^2.22.2",
     "cross-env": "^7.0.3",
+    "dayjs": "^1.10.4",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
     "lodash": "^4.17.21",
