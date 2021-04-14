@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 import useSocket from '../hooks/useSocket';
 
 export default function Container() {
-  const router = useRouter();
+  const { query } = useRouter();
 
   const { messages, appendMsg } = useMessages([]);
 
-  const { id } = router.query;
+  const { id } = query;
 
   const socket = useSocket({
     message(data: any) {
