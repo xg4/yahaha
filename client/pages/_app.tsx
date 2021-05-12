@@ -2,9 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import '@chatui/core/dist/index.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { Provider } from 'react-redux';
 import '../css/tailwind.css';
-import store from '../store';
 
 const client = new ApolloClient({
   uri: '/graphql',
@@ -23,9 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
       <ApolloProvider client={client}>
-        <Provider store={store}>
-          <Component {...pageProps} />
-        </Provider>
+        <Component {...pageProps} />
       </ApolloProvider>
     </>
   );
