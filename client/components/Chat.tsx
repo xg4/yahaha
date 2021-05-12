@@ -24,7 +24,7 @@ export default function Container() {
     welcome(data: any) {
       appendMsg({
         position: 'center',
-        type: 'text',
+        type: 'system',
         content: {
           text: (
             <>

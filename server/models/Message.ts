@@ -1,14 +1,14 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseModel, User } from './';
 
 @Entity({ name: 'messages' })
 export class Message extends BaseModel {
-  @OneToOne(() => User)
-  @JoinColumn()
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'to_id' })
   to: User;
 
-  @OneToOne(() => User)
-  @JoinColumn()
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'from_id' })
   from: User;
 
   @Column()
