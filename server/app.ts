@@ -1,33 +1,32 @@
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { createServer } from 'http';
-import morgan from 'morgan';
 import next from 'next';
 import { join } from 'path';
+import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { initDB } from './db';
+import { createConnection } from 'typeorm';
 import { resolvers } from './resolvers';
 import { initSocket } from './socket';
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== 'production';
 
-const app = next({ dev, dir: join(__dirname, '../client') });
-const handle = app.getRequestHandler();
+const nextApp = next({ dev, dir: join(process.cwd(), './client') });
+const handle = nextApp.getRequestHandler();
 
 async function main() {
-  await initDB();
-  await app.prepare();
+  await createConnection();
+  await nextApp.prepare();
 
-  const server = express();
+  const app = express();
 
-  const httpServer = createServer(server);
+  const httpServer = createServer(app);
 
   initSocket(httpServer);
 
   // middleware
-  server.use(express.json());
-  server.use(morgan('tiny', { skip: (req) => req.url.startsWith('/_next') }));
+  app.use(express.json());
 
   const schema = await buildSchema({ resolvers });
 
@@ -46,10 +45,10 @@ async function main() {
       // user: req.user,
     }),
   });
-  apolloServer.applyMiddleware({ app: server, cors: false, path: '/graphql' });
+  apolloServer.applyMiddleware({ app, cors: false, path: '/graphql' });
 
   // client, next.js
-  server.all('*', (req, res) => handle(req, res));
+  app.all('*', (req, res) => handle(req, res));
 
   httpServer.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
