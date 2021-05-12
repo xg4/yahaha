@@ -22,7 +22,7 @@
     "dev": "nodemon --watch server --ext ts --exec npm run serve",
     "build": "next build ./client",
     "start": "cross-env NODE_ENV=production npm run serve",
-    "gen": "graphql-codegen --config codegen.js"
+    "gen": "graphql-codegen --config codegen.yml"
   },
   "husky": {
     "hooks": {
