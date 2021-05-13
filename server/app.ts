@@ -7,7 +7,7 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { resolvers } from './resolvers';
-import { initSocket } from './socket';
+import { initWS } from './ws';
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -23,9 +23,10 @@ async function main() {
 
   const httpServer = createServer(app);
 
-  initSocket(httpServer);
+  initWS(httpServer);
 
   // middleware
+  app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
   const schema = await buildSchema({ resolvers });

@@ -1,5 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import '@chatui/core/dist/index.css';
+import { Provider } from 'next-auth/client';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import '../css/tailwind.css';
@@ -20,9 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
         />
       </Head>
-      <ApolloProvider client={client}>
-        <Component {...pageProps} />
-      </ApolloProvider>
+      <Provider session={pageProps.session}>
+        <ApolloProvider client={client}>
+          <Component {...pageProps} />
+        </ApolloProvider>
+      </Provider>
     </>
   );
 }

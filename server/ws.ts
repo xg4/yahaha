@@ -14,7 +14,7 @@ interface ReceiveMessage {
 
 type SuccessCallback = Function;
 
-export function initSocket(server: http.Server) {
+export function initWS(server: http.Server) {
   const io = new Server(server);
 
   io.on('connection', (socket: Socket) => {
