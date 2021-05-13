@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { createServer } from 'http';
@@ -5,7 +6,6 @@ import next from 'next';
 import { join } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { createConnection } from 'typeorm';
 import { resolvers } from './resolvers';
 import { initWS } from './ws';
 
@@ -16,7 +16,6 @@ const nextApp = next({ dev, dir: join(process.cwd(), './client') });
 const handle = nextApp.getRequestHandler();
 
 async function main() {
-  await createConnection();
   await nextApp.prepare();
 
   const app = express();
@@ -31,6 +30,8 @@ async function main() {
 
   const schema = await buildSchema({ resolvers });
 
+  const prisma = new PrismaClient();
+
   const apolloServer = new ApolloServer({
     schema,
     context: ({
@@ -42,6 +43,7 @@ async function main() {
     }) => ({
       req,
       res,
+      prisma,
       // TODO: Handle user/sessions here
       // user: req.user,
     }),

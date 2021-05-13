@@ -1,5 +1,9 @@
+import { PrismaClient } from '@prisma/client';
 import NextAuth from 'next-auth';
+import Adapters from 'next-auth/adapters';
 import Providers from 'next-auth/providers';
+
+const prisma = new PrismaClient();
 
 export const config = {
   api: {
@@ -15,5 +19,5 @@ export default NextAuth({
     }),
   ],
 
-  database: { type: 'postgres', url: process.env.DATABASE_URL },
+  adapter: Adapters.Prisma.Adapter({ prisma }),
 });
