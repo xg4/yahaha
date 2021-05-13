@@ -34,19 +34,15 @@ async function main() {
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({
-      req,
-      res,
-    }: {
-      req: Express.Request;
-      res: Express.Response;
-    }) => ({
-      req,
-      res,
-      prisma,
-      // TODO: Handle user/sessions here
-      // user: req.user,
-    }),
+    async context({ req, res }) {
+      return {
+        req,
+        res,
+        prisma,
+        // TODO: Handle user/sessions here
+        // user: req.user,
+      };
+    },
   });
   apolloServer.applyMiddleware({ app, cors: false, path: '/graphql' });
 

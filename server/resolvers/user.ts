@@ -1,4 +1,4 @@
-import { GQLCtx } from 'server/gql';
+import { GQLCtx } from 'server/types/gql';
 import { Ctx, Field, Int, ObjectType, Query, Resolver } from 'type-graphql';
 
 @ObjectType()
@@ -7,16 +7,16 @@ class User {
   id: number;
 
   @Field(() => String, { nullable: true })
-  name: string | null;
+  name?: string;
 
   @Field(() => String, { nullable: true })
-  email: string | null;
+  email?: string;
 
   @Field(() => Date, { nullable: true })
-  emailVerified: Date | null;
+  emailVerified?: Date;
 
   @Field(() => String, { nullable: true })
-  image: string | null;
+  image?: string;
 
   @Field(() => Date)
   createdAt: Date;

@@ -15,8 +15,10 @@
   "author": "xg4 <xingor4@gmail.com>",
   "main": "server/app.ts",
   "scripts": {
-    "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:deploy": "prisma migrate deploy",
     "serve": "ts-node server/app.ts",
     "dev": "nodemon --watch server --ext ts --exec npm run serve",
     "build": "next build ./client",
@@ -29,7 +31,7 @@
     }
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
+    "*.{ts,tsx,js,jsx,json,md}": [
       "prettier --write",
       "git add"
     ]
