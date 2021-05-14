@@ -27,8 +27,8 @@ class User {
 
 @Resolver()
 export class UserResolver {
-  @Query(() => [User])
-  async users(@Ctx() { prisma }: GQLCtx) {
-    return prisma.user.findMany();
+  @Query(() => User, { nullable: true })
+  async currentUser(@Ctx() { user }: GQLCtx) {
+    return user;
   }
 }

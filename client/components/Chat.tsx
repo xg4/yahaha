@@ -2,6 +2,7 @@ import Chat, { Bubble, MessageProps, useMessages } from '@chatui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useCurrentUserQuery } from '../generated/graphql';
 import useSocket from '../hooks/useSocket';
 
 export default function Container() {
@@ -10,6 +11,8 @@ export default function Container() {
   const { messages, appendMsg } = useMessages([]);
 
   const { id } = query;
+
+  const { data } = useCurrentUserQuery();
 
   const socket = useSocket({
     message(data: any) {
@@ -43,6 +46,11 @@ export default function Container() {
     socket.emit('join', id);
   }, [id]);
 
+  function renderMessageContent(msg: MessageProps) {
+    const { content } = msg;
+    return <Bubble content={content.text} />;
+  }
+
   function handleSend(type: string, val: string) {
     if (type === 'text' && val.trim()) {
       socket.send(
@@ -54,16 +62,14 @@ export default function Container() {
           appendMsg({
             type: 'text',
             content: { text: val },
+            user: {
+              avatar: data?.currentUser?.image ?? undefined,
+            },
             position: 'right',
           });
         },
       );
     }
-  }
-
-  function renderMessageContent(msg: MessageProps) {
-    const { content } = msg;
-    return <Bubble content={content.text} />;
   }
 
   return (

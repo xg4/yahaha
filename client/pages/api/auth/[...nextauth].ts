@@ -19,5 +19,14 @@ export default NextAuth({
     }),
   ],
 
+  secret: process.env.SESSION_SECRET,
+
   adapter: Adapters.Prisma.Adapter({ prisma }),
+
+  callbacks: {
+    session(session, user) {
+      session.userId = user.id;
+      return session;
+    },
+  },
 });

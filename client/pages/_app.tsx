@@ -3,7 +3,7 @@ import '@chatui/core/dist/index.css';
 import { Provider } from 'next-auth/client';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import '../css/tailwind.css';
+import '../style/tailwind.css';
 
 const client = new ApolloClient({
   uri: '/graphql',

@@ -6,6 +6,7 @@ import next from 'next';
 import { join } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
+import { getCurrentUser } from './lib/auth';
 import { resolvers } from './resolvers';
 import { initWS } from './ws';
 
@@ -16,6 +17,7 @@ const nextApp = next({ dev, dir: join(process.cwd(), './client') });
 const handle = nextApp.getRequestHandler();
 
 async function main() {
+  const prisma = new PrismaClient();
   await nextApp.prepare();
 
   const app = express();
@@ -30,17 +32,15 @@ async function main() {
 
   const schema = await buildSchema({ resolvers });
 
-  const prisma = new PrismaClient();
-
   const apolloServer = new ApolloServer({
     schema,
     async context({ req, res }) {
+      const user = await getCurrentUser(req);
       return {
         req,
         res,
         prisma,
-        // TODO: Handle user/sessions here
-        // user: req.user,
+        user,
       };
     },
   });
