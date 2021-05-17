@@ -1,5 +1,13 @@
 import { GQLCtx } from 'server/types/gql';
-import { Ctx, Field, Int, ObjectType, Query, Resolver } from 'type-graphql';
+import {
+  Authorized,
+  Ctx,
+  Field,
+  Int,
+  ObjectType,
+  Query,
+  Resolver,
+} from 'type-graphql';
 
 @ObjectType()
 class User {
@@ -27,6 +35,7 @@ class User {
 
 @Resolver()
 export class UserResolver {
+  @Authorized()
   @Query(() => User, { nullable: true })
   async currentUser(@Ctx() { user }: GQLCtx) {
     return user;

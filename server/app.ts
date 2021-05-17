@@ -7,6 +7,7 @@ import { join } from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { getCurrentUser } from './lib/auth';
+import { authChecker } from './lib/auth-checker';
 import { resolvers } from './resolvers';
 import { initWS } from './ws';
 
@@ -30,7 +31,7 @@ async function main() {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
-  const schema = await buildSchema({ resolvers });
+  const schema = await buildSchema({ resolvers, authChecker });
 
   const apolloServer = new ApolloServer({
     schema,
