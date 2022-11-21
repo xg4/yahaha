@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  username         String    @unique
+  email            String?   @unique
+  password         String
+  sockets          Socket[]
+  sentMessages     Message[] @relation("sentMessages")
+  receivedMessages Message[] @relation("receivedMessages")
+  friends          Friend[]
+  fFriends         Friend[]  @relation("fFriends")
+
+  @@map("users")
+}
+
+model Socket {
+  id        String   @id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id])
+  userAgent String? @map("user_agent")
+  ip        String?
+
+  @@index([userId])
+  @@map("sockets")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  receiver   User          @relation("receivedMessages", fields: [receiverId], references: [id])
+  receiverId Int           @map("receiver_id")
+  sender     User          @relation("sentMessages", fields: [senderId], references: [id])
+  senderId   Int           @map("sender_id")
+  content    String
+  status     MessageStatus @default(SENT)
+  uuid       String        @unique
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@map("messages")
+}
+
+enum MessageStatus {
+  SENT
+  RECEIVED
+  READ
+}
+
+model Friend {
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int     @map("user_id")
+  friend   User    @relation("fFriends", fields: [friendId], references: [id])
+  friendId Int     @map("friend_id")
+  // acceptedAt DateTime?
+  disabled Boolean @default(false)
+
+  @@id([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+  @@map("friends")
+}
