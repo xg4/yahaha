@@ -11,13 +11,12 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  id               Int       @id @default(autoincrement())
   username         String    @unique
   email            String?   @unique
   password         String
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
   sockets          Socket[]
   sentMessages     Message[] @relation("sentMessages")
   receivedMessages Message[] @relation("receivedMessages")
@@ -29,30 +28,28 @@ model User {
 
 model Socket {
   id        String   @id
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  userAgent String?  @map("user_agent")
+  ip        String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  userId    Int     @map("user_id")
-  user      User    @relation(fields: [userId], references: [id])
-  userAgent String? @map("user_agent")
-  ip        String?
 
   @@index([userId])
   @@map("sockets")
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
+  id         Int           @id @default(autoincrement())
+  uuid       String        @unique
+  content    String
   receiver   User          @relation("receivedMessages", fields: [receiverId], references: [id])
   receiverId Int           @map("receiver_id")
   sender     User          @relation("sentMessages", fields: [senderId], references: [id])
   senderId   Int           @map("sender_id")
-  content    String
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
   status     MessageStatus @default(SENT)
-  uuid       String        @unique
 
   @@index([senderId])
   @@index([receiverId])

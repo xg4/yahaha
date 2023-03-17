@@ -2,6 +2,6 @@
   "extends": "@tsconfig/node-lts-strictest/tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "types": ["./src/types"]
+    "resolveJsonModule": true
   }
 }
